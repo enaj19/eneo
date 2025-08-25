@@ -1,0 +1,142 @@
+/* Base */
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #f4f6f8;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Header */
+h1 {
+  text-align: center;
+  color: #0e71b3;
+  font-size: 28px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  font-size: 14px;
+  margin-bottom: 20px;
+  color: #555;
+}
+
+.breadcrumb span {
+  cursor: pointer;
+  color: #0e71b3;
+  transition: color 0.2s;
+}
+
+.breadcrumb span:hover {
+  text-decoration: underline;
+  color: #0970b9;
+}
+
+.breadcrumb span::after {
+  content: "/";
+  margin: 0 5px;
+  color: #aaa;
+}
+
+.breadcrumb span:last-child::after {
+  content: "";
+  margin: 0;
+}
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+th, td {
+  padding: 12px 15px;
+  text-align: left;
+}
+
+th {
+  background-color: #0e71b3;
+  color: #fff;
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #0c5a8a;
+}
+
+tr {
+  transition: background 0.2s, transform 0.1s;
+  cursor: pointer;
+}
+
+tr:hover {
+  background: #e6f0ff;
+  transform: scale(1.001);
+}
+
+/* File icons */
+.file-icon {
+  margin-right: 10px;
+  font-size: 16px;
+}
+
+.fa-folder {
+  color: #f1c40f;
+}
+.fa-file-excel {
+  color: #21a366;
+}
+.fa-file-word {
+  color: #2b579a;
+}
+.fa-file-powerpoint {
+  color: #d24726;
+}
+.fa-file-pdf {
+  color: #e44d26;
+}
+.fa-file-image {
+  color: #007bff;
+}
+.fa-file-archive {
+  color: #7b7d7f;
+}
+
+/* Taille et date */
+td:nth-child(3),
+td:nth-child(4) {
+  color: #555;
+  font-size: 13px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+  }
+
+  th, td {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+}
