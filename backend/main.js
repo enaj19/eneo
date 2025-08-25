@@ -8,8 +8,8 @@ const app = express();
 
 const PORT = process.env.PORT || 5000;
 const ALLOW_ORIGIN = process.env.ALLOW_ORIGIN || "http://localhost:5173";
-
 // Autoriser les requêtes venant du client React
+// app.use(cors({ origin: "*" })); // Autorise toutes les origines (à sécuriser ensuite)
 app.use(cors({ origin:  ALLOW_ORIGIN }));
 app.use(express.json());
 
@@ -121,6 +121,11 @@ app.get("/api/download", (req, res) => {
 });
 
 // 🚀 Lancer le serveur
-app.listen(PORT, () => {
+// app.listen(PORT, () => {
+//   console.log(`Backend démarré sur http://localhost:${PORT}`);
+// });
+// 🚀 Lancer le serveur sur toutes les interfaces réseau
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Backend démarré sur http://localhost:${PORT}`);
+  console.log(`Accessible sur le réseau via : http://<IP_DE_TA_MACHINE>:${PORT}`);
 });
