@@ -34,3 +34,9 @@ npm-debug.log*
 # Misc
 .DS_Store
 *.pem
+# Fichiers d'environnement
+env
+
+# Fichiers de test du backend
+fichiers_test
+
