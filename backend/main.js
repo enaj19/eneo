@@ -51,14 +51,18 @@ const getFileType = (filename, isDirectory) => {
   }
 };
 
-// Assure-toi d'importer la fonction ldapLogin depuis le fichier où tu l'as enregistrée
-const { ldapLogin } = require("./ldap"); // Assurez-vous que le chemin est correct
+
+const { ldapLogin } = require("./ldap"); 
 
 /**
  * POST /api/login
  * Gère l'authentification des utilisateurs via LDAP
  * Reçoit { username, password } dans le corps de la requête
  */
+
+
+// main.js -> dans app.post("/api/login", ...)
+
 app.post("/api/login", async (req, res) => {
     const { username, password } = req.body;
 
@@ -71,15 +75,18 @@ app.post("/api/login", async (req, res) => {
 
         if (user) {
             // L'authentification a réussi
+            console.log("Connexion réussie pour l'utilisateur:", user);
             return res.status(200).json({ success: true, user });
         } else {
-            // L'authentification a échoué
+            // L'authentification a échoué (identifiants invalides)
+            console.log("Échec de l'authentification pour:", username);
             return res.status(401).json({ success: false, message: "Nom d'utilisateur ou mot de passe invalide." });
         }
     } catch (err) {
-        console.error("Erreur LDAP :", err);
-        // On renvoie une erreur d'authentification générique pour ne pas révéler d'informations sensibles
-        return res.status(401).json({ success: false, message: "Nom d'utilisateur ou mot de passe invalide." });
+        // Cette partie va maintenant attraper les erreurs de configuration ou de connexion au serveur
+        console.error("Erreur serveur lors de la tentative de connexion LDAP :", err.message);
+        // On renvoie une erreur 500 car le problème vient du serveur (ex: URL manquante, serveur LDAP injoignable)
+        return res.status(500).json({ success: false, message: "Erreur du service d'authentification. Contactez l'administrateur." });
     }
 });
 /**

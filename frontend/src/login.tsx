@@ -13,6 +13,8 @@ const Login = ({ onLoginSuccess }: LoginProps) => {
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const [loading, setLoading] = useState(false);
+    // 1. Nouvel état pour gérer la visibilité du mot de passe
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -61,7 +63,7 @@ const Login = ({ onLoginSuccess }: LoginProps) => {
                         display: flex;
                         justify-content: center;
                         align-items: center;
-                        height: 100vh;
+                        height: 85vh;
                         margin: 0;
                     }
 
@@ -75,7 +77,7 @@ const Login = ({ onLoginSuccess }: LoginProps) => {
                     }
 
                     h2 {
-                        color: #2c3e50;
+                        color: #000000ff;
                         margin-bottom: 20px;
                     }
 
@@ -92,7 +94,8 @@ const Login = ({ onLoginSuccess }: LoginProps) => {
                     }
 
                     input[type="text"],
-                    input[type="password"] {
+                    input[type="password"],
+                    .form-group-password input {
                         width: 100%;
                         padding: 10px;
                         border: 1px solid #ccc;
@@ -101,10 +104,26 @@ const Login = ({ onLoginSuccess }: LoginProps) => {
                         transition: border-color 0.3s;
                     }
 
-                    input[type="text"]:focus,
-                    input[type="password"]:focus {
+                    input:focus {
                         outline: none;
                         border-color: #3498db;
+                    }
+
+                    /* 4. Nouveau CSS pour la mise en page de l'icône */
+                    .form-group-password {
+                        position: relative;
+                    }
+                    .toggle-password-icon {
+                        position: absolute;
+                        right: 4px;
+                        top: 70%;
+                        transform: translateY(-50%);
+                        cursor: pointer;
+                        color: #555;
+                    }
+                    .toggle-password-icon svg {
+                        width: 20px;
+                        height: 20px;
                     }
 
                     .error-message {
@@ -114,8 +133,8 @@ const Login = ({ onLoginSuccess }: LoginProps) => {
 
                     .login-button {
                         width: 100%;
-                        padding: 12px;
-                        background-color: #3498db;
+                        padding: 10px;
+                        background-color: #000000ff;
                         color: white;
                         border: none;
                         border-radius: 5px;
@@ -125,7 +144,7 @@ const Login = ({ onLoginSuccess }: LoginProps) => {
                     }
 
                     .login-button:hover {
-                        background-color: #2980b9;
+                        background-color: #307aab;
                     }
                     
                     .login-button:disabled {
@@ -146,15 +165,37 @@ const Login = ({ onLoginSuccess }: LoginProps) => {
                         required
                     />
                 </div>
-                <div className="form-group">
+                <div className="form-group form-group-password">
                     <label htmlFor="password">Mot de passe</label>
                     <input
-                        type="password"
+                        // 2. Le type est maintenant contrôlé par l'état showPassword
+                        type={showPassword ? "text" : "password"}
                         id="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
+                    {/* 3. L'icône de l'oeil avec sa fonction de basculement */}
+                    <span
+                        className="toggle-password-icon"
+                        // Gérer le clic et le maintien
+                        onMouseDown={() => setShowPassword(true)}
+                        onMouseUp={() => setShowPassword(false)}
+                        onMouseLeave={() => setShowPassword(false)}
+                    >
+                        {showPassword ? (
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 0112 5.5c2.946 0 5.673 1.144 7.788 3.193M3.98 8.223a7.7 7.7 0 00.901 1.76l.338.358M3.98 8.223L5.356 12m7.788-3.777a7.7 7.7 0 00-.901-1.76L12 5.5c-2.946 0-5.673 1.144-7.788 3.193M12 5.5V5.5m0 0a.44.44 0 01.44.44v.11a.44.44 0 01-.44.44v-.11M12 5.5V5.5m0 0a.44.44 0 01.44.44v.11a.44.44 0 01-.44.44v-.11" />
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 5.5L12 5.5" />
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M15.42 12.578a3.15 3.15 0 01-4.464 0" />
+                            </svg>
+                        ) : (
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 21c-4.97 0-9-3.358-9-7.5s4.03-7.5 9-7.5 9 3.358 9 7.5-4.03 7.5-9 7.5z" />
+                            </svg>
+                        )}
+                    </span>
                 </div>
                 <button type="submit" className="login-button" disabled={loading}>
                     {loading ? "Connexion en cours..." : "Se connecter"}
