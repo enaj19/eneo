@@ -3,7 +3,8 @@ import axios from "axios";
 import "./App.css";
 import "fontawesome-free/css/all.min.css";
 import { usePagination, DOTS } from "./usePagination";
-import Login from "./login"; // Import du composant de connexion
+import Login from "./login"; 
+
 
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
@@ -49,7 +50,7 @@ function App() {
             }
         };
         fetchFiles();
-    }, [currentPath, isAuthenticated]); // Ajout de isAuthenticated aux dépendances
+    }, [currentPath, isAuthenticated]); 
 
     useEffect(() => {
         setCurrentPage(1);
@@ -170,7 +171,7 @@ function App() {
     };
 
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 40;
+    const itemsPerPage = 20 ; //nombre de fichier/dossier par page
 
     const paginatedFiles = useMemo(() => {
         const indexOfLastItem = currentPage * itemsPerPage;
@@ -208,7 +209,7 @@ function App() {
     return (
         <div className="container">
             <a href="?path=">
-                <img src="logo.png" alt="Logo Eneo" style={{ height: "50px" }} />
+                <img src="logo.png" alt="Logo Eneo" style={{ height: "80px" }} />
             </a>
             <h1>
                 <span className="ressources-color">📂 Ressources Documentaires </span>
@@ -242,11 +243,11 @@ function App() {
                 <div className="table-container">
                     <table>
                         <colgroup>
-                            <col style={{ width: "25%" }} />
-                            <col style={{ width: "20%" }} />
+                            <col style={{ width: "30%" }} />
+                            <col style={{ width: "15%" }} />
                             <col style={{ width: "10%" }} />
                             <col style={{ width: "10%" }} />
-                            <col style={{ width: "10%" }} />
+                            <col style={{ width: "8%" }} />
                         </colgroup>
                         <thead>
                             <tr>

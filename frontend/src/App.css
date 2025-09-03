@@ -10,7 +10,7 @@ body {
 }
 
 .container {
-  width:auto;              /* s'adapte à presque toute la largeur de l'écran */
+  width:auto;              
   max-width: 1400px;        /* limite pour éviter trop d'étirement sur grands écrans */
   max-height:fit-content;         /* occupe au moins 80% de la hauteur */
   margin:auto;
@@ -24,9 +24,9 @@ body {
 
 h1 {
   text-align: center;
-  color: #0e71b3;
-  font-size: 28px;
-  margin-bottom: 20px;
+  font-size:35px;
+  margin-bottom:10px; 
+  margin-top:20px;
   font-weight: 600;
 }
 
@@ -41,7 +41,7 @@ h1 {
   transition: color 0.2s;
 }
 .breadcrumb span:hover {
-  color: #0970b9;
+  color: #000000;
 }
 
 /* Table Layout */
@@ -229,7 +229,7 @@ input[type="text"]:focus {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 15px; /* Écart fixe entre les boutons */
+    gap: 10px; /* Écart fixe entre les boutons */
     margin-top: 10px;
     padding: 5px;
     flex-wrap: nowrap; /* Empêche le retour à la ligne */
@@ -279,15 +279,15 @@ input[type="text"]:focus {
     background-color: transparent;
 }
 .ressources-color {
-  color: #000000; /* Remplace avec la couleur de ton choix */
+  color: #000000; 
 }
 
 .eneo-e-color {
-  color: #307aab; /* Remplace avec la couleur de ton choix */
+  color: #307aab; 
 }
 
 .eneo-neo-color {
-  color: #a7c446; /* Remplace avec la couleur de ton choix */
+  color: #a7c446; 
 }
 .btn {
   min-width: 110px;
@@ -312,7 +312,7 @@ input[type="text"]:focus {
 
 
 .table-container {
-  max-height: 70vh;   /* ajuste selon ton besoin */
+  max-height: 63vh;   
   overflow-y: auto;
 }
 

@@ -3,15 +3,13 @@ const { Client } = require('ldapjs');
 /**
  * Gère la connexion et l'authentification d'un utilisateur sur le serveur LDAP.
  *
- * @param {string} userId - L'identifiant de l'utilisateur.
- * @param {string} password - Le mot de passe de l'utilisateur.
- * @returns {Promise<boolean>} Renvoie `true` si l'authentification est réussie, sinon lève une exception.
+ * @param {string} userId 
+ * @param {string} password 
+ * @returns {Promise<boolean>} 
  */
 const ldapLogin = async (userId, password) => {
-    // Définition de variables de secours pour éviter l'erreur "undefined".
-    // REMPLACEZ 'ldap://192.168.1.10:389' par votre URL de serveur LDAP réelle.
-    const LDAP_URL = process.env.LDAP_URL || 'ldap://10.250.90.8:389';
-    const BASE_DN = process.env.BASE_DN || 'dc=camlight,dc=cm';
+    const LDAP_URL = process.env.LDAP_URL || ''; 
+    const BASE_DN = process.env.BASE_DN || ''; 
     const SUPERADMIN_PASSWORD = process.env.SUPERADMIN_PASSWORD || 'motdepasse-super-secret';
 
     // --- LOGIQUE DE TEST SUPERADMIN (À ENLEVER EN PRODUCTION) ---
