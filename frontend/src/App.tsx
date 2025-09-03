@@ -2,7 +2,9 @@ import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import "./App.css";
 import "fontawesome-free/css/all.min.css";
-import { usePagination, DOTS } from "./usePagination"; // Assurez-vous que le chemin est correct
+import { usePagination, DOTS } from "./usePagination";
+import Login from "./login"; // Import du composant de connexion
+
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
@@ -24,7 +26,14 @@ function App() {
     const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
     const [search, setSearch] = useState("");
 
+    // --- NOUVEAU : État d'authentification ---
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    
+
     useEffect(() => {
+        // La fonction fetchFiles ne sera appelée que si l'utilisateur est authentifié
+        if (!isAuthenticated) return;
+
         const fetchFiles = async () => {
             setLoading(true);
             try {
@@ -40,10 +49,10 @@ function App() {
             }
         };
         fetchFiles();
-    }, [currentPath]);
+    }, [currentPath, isAuthenticated]); // Ajout de isAuthenticated aux dépendances
 
     useEffect(() => {
-    setCurrentPage(1);  
+        setCurrentPage(1);
     }, [search]);
 
     const handleDoubleClick = (file: FileItem) => {
@@ -64,7 +73,7 @@ function App() {
 
             const a = document.createElement("a");
             a.href = url;
-            a.download = item.name; // nom du fichier téléchargé
+            a.download = item.name;
             document.body.appendChild(a);
             a.click();
             a.remove();
@@ -161,7 +170,7 @@ function App() {
     };
 
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 40; // change selon besoin
+    const itemsPerPage = 40;
 
     const paginatedFiles = useMemo(() => {
         const indexOfLastItem = currentPage * itemsPerPage;
@@ -174,7 +183,7 @@ function App() {
         currentPage,
         totalCount: sortedFilteredFiles.length,
         pageSize: itemsPerPage,
-        siblingCount: 5 // Vous pouvez ajuster le nombre de pages "voisines" à afficher
+        siblingCount: 5
     });
 
     const onNext = () => {
@@ -190,9 +199,11 @@ function App() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     };
-    
-    
 
+    // --- NOUVEAU : Rendu conditionnel ---
+    if (!isAuthenticated) {
+        return <Login onLoginSuccess={() => setIsAuthenticated(true)} />;
+    }
 
     return (
         <div className="container">
@@ -209,7 +220,7 @@ function App() {
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "15px" }}>
                 <div style={{ display: "flex", gap: "10px" }}>
                     <button onClick={() => setView("table")} className={`${view === "table" ? "active-view" : ""}`}>
-                        <i className="fas fa-table"></i> <span className="md">Vue Tableau</span> 
+                        <i className="fas fa-table"></i> <span className="md">Vue Tableau</span>
                     </button>
                     <button onClick={() => setView("cards")} className={`${view === "cards" ? "active-view" : ""}`}>
                         <i className="fas fa-th-large"></i> <span className="md">Vue Cartes</span>
@@ -228,66 +239,65 @@ function App() {
                 <p>Chargement...</p>
             ) : view === "table" ? (
 
-            <div className="table-container">    
-                <table>
-                      {/* Largeurs : Nom | Type | Taille | Modifié | Actions */}
-                    <colgroup>
-                        <col style={{ width: "25%" }} />
-                        <col style={{ width: "20%" }} />
-                        <col style={{ width: "10%" }} />
-                        <col style={{ width: "10%" }} />
-                        <col style={{ width: "10%" }} />
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th onClick={() => toggleSort("name")}>
-                                Nom {sortColumn === "name" ? (sortDirection === "asc" ? "▲" : "▼") : ""}
-                            </th>
-                            <th onClick={() => toggleSort("type")}>
-                                Type {sortColumn === "type" ? (sortDirection === "asc" ? "▲" : "▼") : ""}
-                            </th>
-                            <th onClick={() => toggleSort("size")}>
-                                Taille {sortColumn === "size" ? (sortDirection === "asc" ? "▲" : "▼") : ""}
-                            </th>
-                            <th onClick={() => toggleSort("modifiedAt")}>
-                                Modifié le {sortColumn === "modifiedAt" ? (sortDirection === "asc" ? "▲" : "▼") : ""}
-                            </th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {sortedFilteredFiles.length === 0 ? (
+                <div className="table-container">
+                    <table>
+                        <colgroup>
+                            <col style={{ width: "25%" }} />
+                            <col style={{ width: "20%" }} />
+                            <col style={{ width: "10%" }} />
+                            <col style={{ width: "10%" }} />
+                            <col style={{ width: "10%" }} />
+                        </colgroup>
+                        <thead>
                             <tr>
-                                <td colSpan={5} style={{ textAlign: "center", color: "#888" }}>
-                                    Aucune correspondance trouvée...
-                                </td>
+                                <th onClick={() => toggleSort("name")}>
+                                    Nom {sortColumn === "name" ? (sortDirection === "asc" ? "▲" : "▼") : ""}
+                                </th>
+                                <th onClick={() => toggleSort("type")}>
+                                    Type {sortColumn === "type" ? (sortDirection === "asc" ? "▲" : "▼") : ""}
+                                </th>
+                                <th onClick={() => toggleSort("size")}>
+                                    Taille {sortColumn === "size" ? (sortDirection === "asc" ? "▲" : "▼") : ""}
+                                </th>
+                                <th onClick={() => toggleSort("modifiedAt")}>
+                                    Modifié le {sortColumn === "modifiedAt" ? (sortDirection === "asc" ? "▲" : "▼") : ""}
+                                </th>
+                                <th>Actions</th>
                             </tr>
-                        ) : (
-                            paginatedFiles.map((f, i) => (
-                                <tr key={i} onDoubleClick={() => handleDoubleClick(f)}>
-                                    <td className="truncate" title={f.name}>
-                                        <i className={`${getIcon(f)} file-icon`}></i> {f.name}
-                                    </td>
-                                    <td className="truncate" title={f.type}>{f.type}</td>
-                                    <td>{formatSize(f.size)}</td>
-                                    <td>{new Date(f.modifiedAt).toLocaleDateString()}</td>
-                                    <td>
-                                        {f.isDirectory ? (
-                                            <button className="btn btn--open" onClick={() => handleDoubleClick(f)}>
-                                            Ouvrir
-                                            </button>
-                                        ) : (
-                                            <button className="btn btn--download" onClick={() => handleDownload(f)}>
-                                            Télécharger
-                                            </button>
-                                        )}
+                        </thead>
+                        <tbody>
+                            {sortedFilteredFiles.length === 0 ? (
+                                <tr>
+                                    <td colSpan={5} style={{ textAlign: "center", color: "#888" }}>
+                                        Aucune correspondance trouvée...
                                     </td>
                                 </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
-            </div>
+                            ) : (
+                                paginatedFiles.map((f, i) => (
+                                    <tr key={i} onDoubleClick={() => handleDoubleClick(f)}>
+                                        <td className="truncate" title={f.name}>
+                                            <i className={`${getIcon(f)} file-icon`}></i> {f.name}
+                                        </td>
+                                        <td className="truncate" title={f.type}>{f.type}</td>
+                                        <td>{formatSize(f.size)}</td>
+                                        <td>{new Date(f.modifiedAt).toLocaleDateString()}</td>
+                                        <td>
+                                            {f.isDirectory ? (
+                                                <button className="btn btn--open" onClick={() => handleDoubleClick(f)}>
+                                                    Ouvrir
+                                                </button>
+                                            ) : (
+                                                <button className="btn btn--download" onClick={() => handleDownload(f)}>
+                                                    Télécharger
+                                                </button>
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                </div>
             ) : (
                 <div className="cards-container">
                     {paginatedFiles.map((f, i) => (
@@ -306,18 +316,15 @@ function App() {
                 </div>
             )}
             <div className="pagination">
-                {/* Bouton Précédent */}
                 <button onClick={onPrevious} disabled={currentPage === 1} className="arrow-button">
                     {"<"}
                 </button>
 
                 {paginationRange?.map((pageNumber, index) => {
-                    // Si c'est un point, on affiche un élément non cliquable
                     if (pageNumber === DOTS) {
                         return <span key={index} className="ellipsis">&#8230;</span>;
                     }
 
-                    // Sinon, on affiche le bouton de page
                     return (
                         <button
                             key={index}
@@ -335,7 +342,6 @@ function App() {
                     );
                 })}
 
-                {/* Bouton Suivant */}
                 <button onClick={onNext} disabled={currentPage === totalPages} className="arrow-button">
                     {">"}
                 </button>

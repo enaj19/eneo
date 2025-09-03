@@ -51,6 +51,37 @@ const getFileType = (filename, isDirectory) => {
   }
 };
 
+// Assure-toi d'importer la fonction ldapLogin depuis le fichier où tu l'as enregistrée
+const { ldapLogin } = require("./ldap"); // Assurez-vous que le chemin est correct
+
+/**
+ * POST /api/login
+ * Gère l'authentification des utilisateurs via LDAP
+ * Reçoit { username, password } dans le corps de la requête
+ */
+app.post("/api/login", async (req, res) => {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+        return res.status(400).json({ success: false, message: "Nom d'utilisateur et mot de passe requis." });
+    }
+
+    try {
+        const user = await ldapLogin(username, password);
+
+        if (user) {
+            // L'authentification a réussi
+            return res.status(200).json({ success: true, user });
+        } else {
+            // L'authentification a échoué
+            return res.status(401).json({ success: false, message: "Nom d'utilisateur ou mot de passe invalide." });
+        }
+    } catch (err) {
+        console.error("Erreur LDAP :", err);
+        // On renvoie une erreur d'authentification générique pour ne pas révéler d'informations sensibles
+        return res.status(401).json({ success: false, message: "Nom d'utilisateur ou mot de passe invalide." });
+    }
+});
 /**
  * GET /api/files
  * Liste les fichiers et dossiers d’un chemin donné

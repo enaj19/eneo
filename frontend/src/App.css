@@ -10,10 +10,10 @@ body {
 }
 
 .container {
-  width: 80%;              /* s'adapte à presque toute la largeur de l'écran */
+  width:auto;              /* s'adapte à presque toute la largeur de l'écran */
   max-width: 1400px;        /* limite pour éviter trop d'étirement sur grands écrans */
   max-height:fit-content;         /* occupe au moins 80% de la hauteur */
-  margin: 20px auto;
+  margin:auto;
   padding: 20px;
   background: #ffffff;
   border-radius: 12px;
